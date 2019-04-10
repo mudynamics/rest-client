@@ -96,6 +96,7 @@ module RestClient
 
   class << self
     attr_accessor :proxy
+    attr_accessor :no_proxy
   end
 
   # Setup the log for RestClient calls.
