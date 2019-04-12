@@ -95,7 +95,7 @@ module RestClient
     end
 
     def net_http_class host
-      if RestClient.proxy && !(RestClient.no_proxy && (RestClient.no_proxy == host || RestClient.no_proxy.include?(host))) && (!RestClient.only_proxy || RestClient.only_proxy.include?(host))
+      if RestClient.proxy_needed?(host)
         proxy_uri = URI.parse(RestClient.proxy)
         Net::HTTP::Proxy(proxy_uri.host, proxy_uri.port, proxy_uri.user, proxy_uri.password)
       else
