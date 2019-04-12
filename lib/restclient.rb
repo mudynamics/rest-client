@@ -94,6 +94,10 @@ module RestClient
     Request.execute(:method => :options, :url => url, :headers => headers, &block)
   end
 
+  def self.proxy_needed?(host)
+    RestClient.proxy && !(RestClient.no_proxy && (RestClient.no_proxy == host || RestClient.no_proxy.include?(host))) && (!RestClient.only_proxy || RestClient.only_proxy.include?(host))
+  end
+
   class << self
     attr_accessor :proxy
     attr_accessor :only_proxy
