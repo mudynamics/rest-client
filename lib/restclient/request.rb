@@ -101,7 +101,8 @@ module RestClient
     def net_http_class host
       if RestClient.proxy_needed?(host)
         proxy_uri = URI.parse(RestClient.proxy)
-        Net::HTTP::Proxy(proxy_uri.host, proxy_uri.port, proxy_uri.user, proxy_uri.password)
+        proxy_host = normalize_host(proxy_uri.host)
+        Net::HTTP::Proxy(proxy_host, proxy_uri.port, proxy_uri.user, proxy_uri.password)
       else
         Net::HTTP
       end
@@ -121,6 +122,10 @@ module RestClient
       @user = CGI.unescape(uri.user) if uri.user
       @password = CGI.unescape(uri.password) if uri.password
       uri
+    end
+
+    def normalize_host(host)
+      host.include?(':') ? host.gsub(/[\[\]]/, '') : host
     end
 
     def process_payload(p=nil, parent_key=nil)
@@ -157,7 +162,8 @@ module RestClient
     def transmit uri, req, payload, & block
       setup_credentials req
 
-      net = net_http_class(uri.host).new(uri.host, uri.port)
+      host = normalize_host(uri.host)
+      net = net_http_class(host).new(host, uri.port)
       net.use_ssl = uri.is_a?(URI::HTTPS)
       if @verify_ssl
         if @verify_ssl.is_a? Integer
