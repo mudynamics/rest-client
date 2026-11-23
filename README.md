@@ -39,6 +39,7 @@ The rest-client gem depends on these other gems for usage at runtime:
 
 * [mime-types](http://rubygems.org/gems/mime-types)
 * [netrc](http://rubygems.org/gems/netrc)
+* [http-accept](https://rubygems.org/gems/http-accept)
 * [http-cookie](https://rubygems.org/gems/http-cookie)
 
 There are also several development dependencies. It's recommended to use
@@ -600,8 +601,13 @@ $ restclient put http://example.com/resource < input_body
 
 To enable logging globally you can:
 
-- set RestClient.log with a Ruby Logger, or
-- set an environment variable to avoid modifying the code (in this case you can use a file name, "stdout" or "stderr"):
+- set RestClient.log with a Ruby Logger
+
+```ruby
+RestClient.log = STDOUT
+```
+
+- or set an environment variable to avoid modifying the code (in this case you can use a file name, "stdout" or "stderr"):
 
 ```ruby
 $ RESTCLIENT_LOG=stdout path/to/my/program
@@ -886,11 +892,10 @@ See AUTHORS for the full list.
 
 ## Legal
 
-Released under the MIT License: http://www.opensource.org/licenses/mit-license.php
+Released under the MIT License: https://opensource.org/licenses/MIT
 
-"Master Shake" photo (http://www.flickr.com/photos/solgrundy/924205581/) by
-"SolGrundy"; used under terms of the Creative Commons Attribution-ShareAlike 2.0
-Generic license (http://creativecommons.org/licenses/by-sa/2.0/)
+Photo of the International Space Station was produced by NASA and is in the
+public domain.
 
 Code for reading Windows root certificate store derived from work by Puppet;
 used under terms of the Apache License, Version 2.0.
