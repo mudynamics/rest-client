@@ -110,6 +110,39 @@ module RestClient
     @proxy_set ||= false
   end
 
+  # Hosts that should never use the global RestClient.proxy. May be a single
+  # host String or an Array of hosts. Does not affect a per-request `:proxy`.
+  def self.no_proxy
+    @no_proxy ||= nil
+  end
+
+  def self.no_proxy=(value)
+    @no_proxy = value
+  end
+
+  # If set, the global RestClient.proxy is used only for these hosts (String or
+  # Array of hosts). Does not affect a per-request `:proxy`.
+  def self.only_proxy
+    @only_proxy ||= nil
+  end
+
+  def self.only_proxy=(value)
+    @only_proxy = value
+  end
+
+  # Whether the global proxy should be used for the given host, taking
+  # RestClient.no_proxy and RestClient.only_proxy into account.
+  #
+  # @param [String] host
+  # @return [Boolean]
+  #
+  def self.proxy_needed?(host)
+    return false unless proxy
+    return false if no_proxy && (no_proxy == host || no_proxy.include?(host))
+    return false if only_proxy && !only_proxy.include?(host)
+    true
+  end
+
   # Setup the log for RestClient calls.
   # Value should be a logger but can can be stdout, stderr, or a filename.
   # You can also configure logging by the environment variable RESTCLIENT_LOG.

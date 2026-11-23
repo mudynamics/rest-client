@@ -427,7 +427,7 @@ module RestClient
     #
     # @return [URI, false, nil]
     #
-    def proxy_uri
+    def proxy_uri(hostname=nil)
       if defined?(@proxy)
         if @proxy
           URI.parse(@proxy)
@@ -435,7 +435,7 @@ module RestClient
           false
         end
       elsif RestClient.proxy_set?
-        if RestClient.proxy
+        if RestClient.proxy && (hostname.nil? || RestClient.proxy_needed?(hostname))
           URI.parse(RestClient.proxy)
         else
           false
@@ -446,7 +446,7 @@ module RestClient
     end
 
     def net_http_object(hostname, port)
-      p_uri = proxy_uri
+      p_uri = proxy_uri(hostname)
 
       if p_uri.nil?
         # no proxy set

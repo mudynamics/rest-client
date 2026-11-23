@@ -559,6 +559,22 @@ describe RestClient::Request, :include_helpers do
       expect(@proxy_req.net_http_object('host', 80).proxy?).to be_falsey
     end
 
+    it "skips the global proxy for hosts in no_proxy" do
+      allow(RestClient).to receive(:proxy).and_return("http://example.com/")
+      allow(RestClient).to receive(:proxy_set?).and_return(true)
+      allow(RestClient).to receive(:no_proxy).and_return(['skip.me'])
+      expect(@proxy_req.net_http_object('skip.me', 80).proxy?).to be_falsey
+      expect(@proxy_req.net_http_object('other', 80).proxy?).to be true
+    end
+
+    it "uses the global proxy only for hosts in only_proxy" do
+      allow(RestClient).to receive(:proxy).and_return("http://example.com/")
+      allow(RestClient).to receive(:proxy_set?).and_return(true)
+      allow(RestClient).to receive(:only_proxy).and_return(['use.me'])
+      expect(@proxy_req.net_http_object('use.me', 80).proxy?).to be true
+      expect(@proxy_req.net_http_object('other', 80).proxy?).to be_falsey
+    end
+
     it "disables proxy on a per-request basis" do
       allow(RestClient).to receive(:proxy).and_return('http://example.com')
       allow(RestClient).to receive(:proxy_set?).and_return(true)
